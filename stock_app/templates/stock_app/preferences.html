@@ -1,0 +1,18 @@
+{%extends 'stock_app/base.html' %} {%block content%}
+<head>
+  <title>Site Preferences</title>
+</head>
+<h2 class="m-3">Select theme mode for chart</h2>
+<form method="post" class="m-3">
+  {%csrf_token%}
+  <div class="form-check">
+    <label class="form-check-label">Light</label>
+    <input class="form-check-input" type="radio" name="mode" value="light" />
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">Dark</label>
+    <input class="form-check-input" type="radio" name="mode" value="dark" checked="checked" />
+  </div>
+  <button type="submit" class="btn btn-dark mt-3">Submit</button>
+</form>
+{%endblock%}

@@ -1,0 +1,349 @@
+{%extends 'stock_app/base.html' %}{%load static%} {%block content%}
+
+<head>
+  <title>Stock Screener</title>
+  <script src="https://unpkg.com/swup@3"></script>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+</head>
+<body id="swup" class="transition-fade">
+  {% if messages %}
+
+  <ul class="messages m-3">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="width: 30ch">
+      {{ message }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <!--Screener filter drop down menu-->
+  <form action="{% url 'stock:index' %}" method="post">
+    {%csrf_token%}
+    <input type="date" name="date" style="margin: 10px; padding: 7px" id="date" />
+    <button
+      type="button"
+      class="btn btn-primary m-3"
+      data-bs-toggle="modal"
+      data-bs-target="#staticBackdrop"
+    >
+      <i class="fa fa-filter fa-2x" aria-hidden="true"></i>
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title h2" id="staticBackdropLabel">Filters</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <label for="">Exchange:</label>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              name="exchange"
+              id="exchange"
+            >
+              <option value="NYSE" class="dropdown-item">NYSE</option>
+              <option value="NASDAQ" class="dropdown-item">NASDAQ</option>
+              <option value="all" class="dropdown-item">All</option>
+            </select>
+            <br />
+            <label for="">Strategy:</label>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              name="strategy"
+              id="strategy"
+            >
+              <option value="CCI" class="dropdown-item">Ultimate Recovery</option>
+            </select>
+            <br />
+            <label for="">Alt data</label>
+            <select
+              name="color"
+              class="form-select"
+              aria-label="Default select example"
+              id="alt_data"
+            >
+              <option
+                value="black"
+                class="dropdown-item"
+                style="background-color: black; color: white"
+              >
+                Black
+              </option>
+              <option
+                value="brown"
+                class="dropdown-item"
+                style="background-color: rgb(123, 63, 0); color: white"
+              >
+                Brown
+              </option>
+              <option
+                value="pink"
+                class="dropdown-item"
+                style="background-color: pink; color: rgb(255, 255, 255)"
+              >
+                Pink
+              </option>
+
+              <option value="red" class="dropdown-item" style="background-color: red; color: white">
+                Red
+              </option>
+              <option
+                value="orange"
+                class="dropdown-item"
+                style="background-color: rgb(248, 179, 50); color: white"
+              >
+                Orange
+              </option>
+              <option
+                value="green"
+                class="dropdown-item"
+                style="background-color: rgb(35, 148, 35); color: white"
+              >
+                Green
+              </option>
+              <option
+                value="light green"
+                class="dropdown-item"
+                style="background-color: rgb(151, 237, 151); color: white"
+              >
+                Light Green
+              </option>
+              <option
+                value="blue"
+                class="dropdown-item"
+                style="background-color: rgb(4, 78, 238); color: white"
+              >
+                Blue
+              </option>
+              <option
+                value="violet"
+                class="dropdown-item"
+                style="background-color: violet; color: white"
+              >
+                Violet
+              </option>
+              <option
+                value="purple"
+                class="dropdown-item"
+                style="background-color: rgb(80, 12, 147); color: white"
+              >
+                Purple
+              </option>
+              <option
+                value="light purple"
+                class="dropdown-item"
+                style="background-color: rgb(135, 31, 221); color: white"
+              >
+                Light Purple
+              </option>
+
+              <option
+                value="yellow"
+                class="dropdown-item"
+                style="background-color: rgb(185, 185, 47); color: white"
+              >
+                Yellow
+              </option>
+            </select>
+            <br />
+            <div class="mb-3">
+              <label for="minPrice" class="form-label">Min price:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="minPrice"
+                aria-describedby="emailHelp"
+                name="minPrice"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="maxPrice" class="form-label">Max price:</label>
+              <input type="number" class="form-control" id="maxPrice" name="maxPrice" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="minMarketCap">Min Market Cap:</label>
+              <input type="number" class="form-control" id="minMarketCap" name="minMarketCap" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="maxMarketCap">Max Market Cap:</label>
+              <input type="number" class="form-control" id="maxMarketCap" name="maxMarketCap" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="minVolume">Min Volume:</label>
+              <input
+                type="number"
+                step="any"
+                class="form-control"
+                id="minVolume"
+                name="minVolume"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-danger">Reset</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!--Format received data about users last search and put it in modal fields-->
+  <script type="text/javascript">
+    var min_price = parseInt("{{pre_min_price}}");
+    var max_price = parseInt("{{pre_max_price}}");
+    const unformated = "{{pre_date_stock}}";
+    const dateBackend = new Date(unformated);
+
+    const dayDate = dateBackend.getDate() + 1;
+    const monthDate = dateBackend.getMonth();
+    const yearDate = dateBackend.getFullYear();
+
+    const formatedFinal = new Date(yearDate, monthDate, dayDate);
+
+    const formatedDate = formatedFinal.toISOString().slice(0, 10);
+    console.log("{{pre_alt_data}}");
+    document.getElementById("minPrice").value = min_price;
+    document.getElementById("maxPrice").value = max_price;
+    document.getElementById("minMarketCap").value = "{{pre_min_market_cap}}";
+    document.getElementById("maxMarketCap").value = "{{pre_max_market_cap}}";
+    document.getElementById("minVolume").value = "{{pre_min_volume}}";
+    document.getElementById("alt_data").value = "{{pre_alt_data}}";
+    document.getElementById("exchange").value = "{{pre_exchange}}";
+    document.getElementById("date").value = formatedDate;
+  </script>
+
+  <!--Show data-->
+  <section>
+    <table class="table table-striped table-hover cell-border" id="myTable">
+      <thead>
+        <tr>
+          <th scope="col">Ticker</th>
+          <th scope="col">Exchange</th>
+          <th scope="col">Company name</th>
+          <th scope="col">Company sector</th>
+          <th scope="col">Company industry</th>
+          <th scope="col">Market cap</th>
+          <th scope="col">Price</th>
+          <th scope="col">Volume</th>
+          <th scope="col">Value</th>
+          <th scope="col">Net gain</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for stock in stocks%}
+
+        <tr>
+          <td>
+            <a href="{% url 'stock:chart' stock.ticker %}" target="_blank" style="color: white"
+              >{{stock.ticker}}</a
+            >
+          </td>
+
+          <td>{{stock.exchange}}</td>
+          <td>{{stock.company_name}}</td>
+          <td>{{stock.company_sector}}</td>
+          <td>{{stock.industry}}</td>
+          <td id="{{ forloop.counter }}"></td>
+          <td>${{stock.price|floatformat:2}}</td>
+          <td id="{{ forloop.counter }}_volume"></td>
+          <td id="{{ forloop.counter }}_value">{{stock.value}}</td>
+          <td id="{{ forloop.counter }}_net-gain">{{stock.net_gain|floatformat}}%</td>
+        </tr>
+        <script>
+          // format market cap
+          var market_cap = Number("{{stock.market_cap}}");
+          var formated_mc = market_cap / 1000000000;
+
+          if (market_cap < 1000000000) {
+            var formated_mc_final = formated_mc.toFixed(2);
+            var formatToStringMc = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 2,
+            }).format(formated_mc_final);
+          } else {
+            var formated_mc_final = formated_mc.toFixed(0);
+            var formatToStringMc = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+            }).format(formated_mc_final);
+          }
+
+          document.getElementById("{{forloop.counter}}").innerHTML = formatToStringMc + "B";
+
+          // format volume
+
+          var volume = Number("{{stock.volume}}");
+          var formated_vol = volume / 1000000;
+
+          var formated_vol_final = formated_vol.toFixed(0);
+
+          var formatToString = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0 }).format(
+            formated_vol_final
+          );
+
+          document.getElementById("{{forloop.counter}}_volume").innerHTML = formatToString + "M";
+
+          // format value
+
+          var value = Number("{{stock.value}}");
+          var formated_value = value / 1000000000;
+          var formated_value_final = formated_value.toFixed(0);
+
+          if (formated_value < 1000000000) {
+            var formated_val_final = formated_value.toFixed(2);
+            var formatToStringVal = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 2,
+            }).format(formated_val_final);
+          } else {
+            var formated_vol_final = formated_vol.toFixed(0);
+
+            var fformatToStringVal = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+            }).format(formated_val_final);
+          }
+          document.getElementById("{{forloop.counter}}_value").innerHTML = formatToStringVal + "B";
+
+          var netGainValue = new Number("{{stock.net_gain}}");
+          if (netGainValue > 0) {
+            document.getElementById("{{ forloop.counter }}_net-gain").style.color = "green";
+          } else {
+            document.getElementById("{{ forloop.counter }}_net-gain").style.color = "red";
+          }
+        </script>
+        {%endfor%}
+      </tbody>
+    </table>
+  </section>
+
+  <!--Order stocks-->
+  <script src="{% static 'javascript/index.js' %}"></script>
+</body>
+{%endblock%}

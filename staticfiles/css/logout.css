@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: auto;
+  text-align: center;
+}
+
+p,
+h1 {
+  font-family: "Courier New", Courier, monospace;
+  color: black;
+  margin-top: 20px;
+}
+
+a {
+  color: black;
+}
+h1 {
+  margin-bottom: 20px;
+}

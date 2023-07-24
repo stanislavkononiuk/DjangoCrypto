@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png'%}" />
+    <title>Logout</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://kit.fontawesome.com/7f87685fd5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/logout.css'%}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Alternate Quant Data</h1>
+      <img src="{% static 'images/check.png' %}" alt="" class="check-img" />
+      <p class="first-p">
+        Thank you! See you soon<br /><span>You are logged out successfully!</span>
+      </p>
+      <p></p>
+      <p class="second-p">Want to log in again? <a href="{% url 'stock:login' %}">Login</a>!</p>
+    </div>
+  </body>
+</html>

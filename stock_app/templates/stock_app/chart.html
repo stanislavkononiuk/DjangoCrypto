@@ -1,0 +1,179 @@
+{%extends 'stock_app/base.html' %} {%load static%} {%block content%} {% load humanize %}
+<html>
+  <head>
+    <title>{{ticker}} Chart</title>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <link
+      href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-scatter.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/chart.css'%}" />
+  </head>
+
+  <body>
+    <div class="border-body"></div>
+    <button type="submit" class="btn m-3" id="change-color">
+      <a href="{% url 'stock:preference' ticker %}">User preference</a>
+    </button>
+    <button type="submit" class="btn m-3" id="watch-list">
+      <a href="{% url 'stock:add to watch list' ticker%}">Add stock to the watch list</a>
+    </button>
+    <div id="container"></div>
+
+    <script>
+          anychart.onDocumentReady(function () {
+              const dataStock = []
+              const dataCCI = []
+              const fedFund = []
+              const smartMoney = []
+              {%for y in smart_money%}
+              currentDate = new Date("{{y.dateY}}")
+              formatDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).toISOString().slice(0, 10)
+              smartMoney.push([formatDate,"{{y.value|floatformat:0}}"])
+              {%endfor%}
+              {%for stock in stocks %}
+              currentDate = new Date("{{stock.date}}")
+              formatDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).toISOString().slice(0, 10)
+              dataStock.push([formatDate, "{{stock.open}}", "{{stock.high}}",
+                  "{{stock.low}}", "{{stock.price}}"])
+              yVal = "{{stock.low}}" - 10
+              if ("{{stock.strategy.color}}") {
+                  if ("{{stock.strategy.color}}" == 'light green') {
+                      color = 'Chartreuse'
+                      color_name = 'light green'
+                  } else if ("{{stock.strategy.color}}" == 'purple') {
+                      color = 'MediumSlateBlue'
+                      color_name = 'purple'
+                  } else if ("{{stock.strategy.color}}" == 'light purple') {
+                      color = 'DarkOrchid'
+                      color_name = 'light purple'
+                  }
+                  else {
+                      color_name = "{{stock.strategy.color}}"
+                      color = "{{stock.strategy.color}}"
+                  }
+
+
+                  dataCCI.push([
+                      formatDate, yVal, { fill: color, markerSize: 2 }, color_name
+                  ],)
+              }
+
+
+              {% endfor %}
+
+              {%for i in interest %}
+              currentDate = new Date("{{i.interest_date}}")
+              formatDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).toISOString().slice(0, 10)
+              fedFund.push([formatDate, "{{i.strategy_interest}}"])
+              {% endfor %}
+
+
+              // set the levels of grouping
+
+              // Strategy
+              table = anychart.data.table(0)
+              table.addData(dataCCI)
+              mapping = table.mapAs({ value: 1, 'marker': 2 });
+
+              // Fed fund
+              table2 = anychart.data.table();
+              table2.addData(fedFund)
+              mapping2 = table.mapAs()
+
+              // Smart money Y
+              table3 = anychart.data.table();
+              table3.addData(smartMoney)
+              mapping3 = table.mapAs()
+
+              let chart = anychart.stock(true);
+              var candlePlot = chart.plot(0)
+              var markerPlot = chart.plot(1)
+              var fedPlot = chart.plot(2)
+              var smartMoneyPlot = chart.plot(3)
+
+              chart.background().fill({
+                  src: "{% static 'images/bg_chart.jpg'%}",
+                  mode: "fit-max",
+                  opacity: 0.2
+              });
+
+              candlePlot.candlestick(dataStock).name('{{ticker}}');
+              markerPlot.marker(mapping).name('Dark Pool');
+              fedPlot.column(fedFund).name('X')
+              smartM = smartMoneyPlot.column(smartMoney).name('Y')
+              var labels = smartM.labels();
+      labels.format(function() {
+
+          // Set format for number using object.
+          return anychart.format.number(this.value, {scale: true, zeroFillDecimals: true, scaleSuffixSeparator: '$'})
+
+      });         grouping = chart.grouping();
+
+              chart.container("container");
+              chart.draw();
+
+
+              var rangeSelector = anychart.ui.rangeSelector();
+              var rangePicker = anychart.ui.rangePicker();
+
+              // specify which chart range selector controls
+
+              rangeSelector.target(chart);
+              rangePicker.target(chart);
+              var title = chart.title('{{ticker}}');
+              // render the chart
+              chart.container("container");
+              chart.draw();
+
+              // Render the range selection controls into containers on a page
+              rangeSelector.render(document.getElementById("rangeselectorContainer"));
+              rangePicker.render(document.getElementById("rangepickerContainer"));
+          });
+
+
+
+          document.body.style.background = '{{background_color}}'
+          document.querySelector('.navbar').style.background = '{{nav}}'
+          document.querySelector('.border-body').style.background = '{{border_body}}'
+          document.querySelector('#watch-list').style.background = '{{button_color}}'
+          document.querySelector('#change-color').style.background = '{{button_color}}'
+          document.querySelector('.border-body').style.border= '5px solid {{nav}}'
+    </script>
+    <!--Calculator-->
+    <div class="m-3">
+      <div class="two-inputs">
+        <div class="input-label">
+          <label>Start amount:</label>
+          <input type="number" id="number_1" />
+        </div>
+        <div class="input-label">
+          <label>End amount:</label>
+          <span style="color: {{text_color}};"> - </span>
+          <input type="number" id="number_2" />
+        </div>
+        <div class="result">
+          <input type="text" id="result" style="color: {{text_color}};" disabled />
+          <input type="text" id="percentage" style="color: {{text_color}};" disabled />
+        </div>
+      </div>
+      <input type="button" onclick="solve()" value="Calculate" />
+      <br /><br />
+      <script src="{% static 'javascript/chart.js' %}"></script>
+    </div>
+  </body>
+  {%endblock%}
+</html>

@@ -1,0 +1,19 @@
+{%extends 'stock_app/base.html'%} {%block content%}
+
+<head>
+  <title>Whatch List</title>
+</head>
+{%for stock in stocks%}
+<div class="m-3 p-3 border">
+  <h1>Ticker: {{stock.stock_ticker}}</h1>
+  <h3>Color: {{stock.color|upper}}</h3>
+  <button class="btn btn-danger mt-2">
+    <a
+      href="{% url 'stock:remove_from_watchlist' stock.stock_ticker stock.color%}"
+      style="color: white; text-decoration: none"
+    >
+      Remove from watchlist</a
+    >
+  </button>
+</div>
+{%endfor%} {%endblock%}

@@ -1,0 +1,9 @@
+{%extends 'stock_app/base.html' %}{%load static%} {%block content%}
+<h6 class="h2 m-3">
+  Are you sure you want to remove {{ticker}} stock with {{color|upper}} indication from watch list?
+</h6>
+<form action="" method="post" class="m-3">
+  {%csrf_token%}
+  <button class="btn btn-danger">REMOVE</button>
+</form>
+{%endblock%}

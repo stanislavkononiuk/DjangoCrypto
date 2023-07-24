@@ -1,0 +1,80 @@
+body {
+  animation: transitionIn 1s;
+}
+
+@keyframes transitionIn {
+  from {
+    opacity: 0;
+    transform: rotateX(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+} /*
+.card-body {
+  text-align: center;
+}
+form {
+  display: inline-block;
+}*/
+#username {
+  border-radius: 25px;
+  width: 300px;
+}
+#password {
+  border-radius: 25px;
+  width: 300px;
+}
+#submited {
+  border-radius: 25px;
+}
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+}
+.animation {
+  animation: moveImage 3s linear;
+}
+.logo {
+  text-align: center;
+}
+.logo-move {
+  width: 200px;
+  height: 200px;
+}
+.content {
+  animation: moveContent 3s linear;
+}
+
+#submited {
+  background-color: rgb(0, 110, 228);
+  color: white;
+  width: 300px;
+}
+#submited:hover {
+  background-color: #30d5c8;
+}
+.row .g-0 {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+#company-name {
+  font-size: 51px;
+  font-weight: bold;
+}
+@keyframes moveImage {
+  100% {
+    transform: translateX(calc(-100vw + 350px));
+  }
+}
+
+@keyframes moveContent {
+  100% {
+    transform: translateX(calc(100vw + 350px));
+  }
+}

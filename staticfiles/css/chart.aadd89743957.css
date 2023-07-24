@@ -1,0 +1,48 @@
+html,
+body,
+#container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+#watch-list a,
+#change-color a {
+  color: white;
+  text-decoration: none;
+}
+/* DEFAULT DARK THEME*/
+.add-border {
+  border: 5px solid white;
+}
+.blue-background {
+  background-color: #3b71ca;
+}
+.white-background {
+  background-color: white;
+}
+.dark-blue-background {
+  background-color: #061821;
+}
+.black-background {
+  background-color: black;
+}
+
+.label-input input,
+label {
+  display: block;
+}
+.two-inputs {
+  display: flex;
+}
+.result {
+  margin-top: 15px;
+  padding: 10px;
+}
+
+#result,
+#percentage {
+  color: white;
+  border: none;
+}

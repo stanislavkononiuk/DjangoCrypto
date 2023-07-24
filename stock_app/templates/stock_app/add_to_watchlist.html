@@ -1,0 +1,148 @@
+{%extends 'stock_app/base.html' %}{%load static%} {%block content%}
+<head>
+  <title>{{stock.stock_ticker}} Whatch List</title>
+</head>
+<h5 class="h1 text-center">Add {{ticker}} to the watchlist</h5>
+<!-- prettier-ignore -->
+{% if messages %}
+<ul class="messages m-3"><!-- prettier-ignore -->
+  {% for message in messages %}
+<!-- prettier-ignore -->
+  <li {%if message.tags%} class="{{ message.tags }}"{%endif%}style="width: 520px">
+    {{ message }}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form action="" method="post">
+  {%csrf_token%}
+  <div class="d-flex flex-row bd-highlight p-3" style="font-size: 21px">
+    <div>
+      <p>
+        I want to be informed by email when stock {{ticker}} with Ultimate
+        Recovery strategy achives
+      </p>
+    </div>
+    <div>
+      <select
+        name="color"
+        class="form-select"
+        aria-label="Default select example"
+        id="alt_data"
+      >
+        <option
+          value="black"
+          class="dropdown-item"
+          style="background-color: black; color: white"
+        >
+          Black
+        </option>
+        <option
+          value="brown"
+          class="dropdown-item"
+          style="background-color: rgb(123, 63, 0); color: white"
+        >
+          Brown
+        </option>
+        <option
+          value="pink"
+          class="dropdown-item"
+          style="background-color: pink; color: rgb(255, 255, 255)"
+        >
+          Pink
+        </option>
+
+        <option
+          value="red"
+          class="dropdown-item"
+          style="background-color: red; color: white"
+        >
+          Red
+        </option>
+        <option
+          value="orange"
+          class="dropdown-item"
+          style="background-color: rgb(248, 179, 50); color: white"
+        >
+          Orange
+        </option>
+        <option
+          value="green"
+          class="dropdown-item"
+          style="background-color: rgb(35, 148, 35); color: white"
+        >
+          Green
+        </option>
+        <option
+          value="light green"
+          class="dropdown-item"
+          style="background-color: rgb(151, 237, 151); color: white"
+        >
+          Light Green
+        </option>
+        <option
+          value="blue"
+          class="dropdown-item"
+          style="background-color: rgb(4, 78, 238); color: white"
+        >
+          Blue
+        </option>
+        <option
+          value="violet"
+          class="dropdown-item"
+          style="background-color: violet; color: white"
+        >
+          Violet
+        </option>
+        <option
+          value="purple"
+          class="dropdown-item"
+          style="background-color: rgb(80, 12, 147); color: white"
+        >
+          Purple
+        </option>
+        <option
+          value="light purple"
+          class="dropdown-item"
+          style="background-color: rgb(135, 31, 221); color: white"
+        >
+          Light Purple
+        </option>
+
+        <option
+          value="yellow"
+          class="dropdown-item"
+          style="background-color: rgb(185, 185, 47); color: white"
+        >
+          Yellow
+        </option>
+      </select>
+    </div>
+    <div class="ms-3">
+      <p>color.</p>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary ms-3">Submit</button>
+</form>
+<hr />
+
+<!--Display watched stocks-->
+<h3 class="text-center">On your watchlist</h3>
+{% for stock in added_to_watchlist%}
+<div class="m-3 p-3 border">
+  <h1>Ticker: {{stock.stock_ticker}}</h1>
+  <h3>Color: {{stock.color|upper}}</h3>
+  <button class="btn btn-danger mt-2">
+    <a
+      href="{% url 'stock:remove_from_watchlist' stock.stock_ticker stock.color%}"
+      style="color: white; text-decoration: none"
+    >
+      Remove from watchlist</a
+    >
+  </button>
+</div>
+{%endfor%} 
+
+</div>
+{%endblock%}

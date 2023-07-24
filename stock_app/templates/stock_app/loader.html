@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png'%}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wellcome</title>
+    <link rel="stylesheet" href="{% static 'css/loader.css'%}" />
+  </head>
+  <body>
+    <video autoplay muted id="myVideo">
+      <source src="{% static 'images/intro.mp4' %}" type="video/mp4" />
+    </video>
+    <script type="text/javascript">
+      document.getElementById("myVideo").addEventListener("ended", myHandler, false);
+      function myHandler(e) {
+        window.location.href = "https://stock-screener.herokuapp.com/";
+      }
+    </script>
+  </body>
+</html>
